@@ -6,8 +6,8 @@
 #include <zpm>
 
 new const is_passed[][] = {"\y未完成", "\r已完成"}
-new const daily_missions[][] = {"null", "[每日签到]", "[僵尸杀手I]", "[僵尸杀手II]", "[感染大师I]", "[逃跑大师]", "[一尸当先]", "[爆菊狂魔]", "[特殊奖励]"}
-new const daily_missions_info[][] = {"null", "登陆游戏", "杀死 15 只僵尸", "杀死 30 只僵尸", "感染 10 个人类", "成功逃跑 15 次", "承受伤害达到 300000 点", "爆菊次数达到 15 次", "完成所有每日任务"}
+new const daily_missions[][] = {"null", "[Daily Sign]", "[Zombie Killer-I]", "[Zombie Killer-II]", "[Infecter-I]", "[Escape Master]", "[Tanker]", "[Assknife]", "[Special Reward]"}
+new const daily_missions_info[][] = {"null", "Login our server", "Kill 15 zombies", "Kill 30 zombies", "Infect 10 humans", "Escape 15 times", "Damaged by human for 300000 HP", "Ass kicked 15 players", "Finish all daily missions"}
 
 new g_vault
 new mission1[33], mission2[33], mission3[33], mission4[33], mission5[33], mission6[33], mission7[33], mission8[33]
@@ -49,7 +49,7 @@ public Native_EscapeSuccess(id)
 	if(mission5[id] == 0 && jinduEscape[id] < 15)
 	{
 		jinduEscape[id] ++
-		client_printc(id, "\g[Mission]\y进度更新: %s | 进度:[%d/15]", daily_missions_info[5], jinduEscape[id])
+		client_printc(id, "\g[Mission]\yProgress update: %s | Progress:[%d/15]", daily_missions_info[5], jinduEscape[id])
 		SaveData(id)
 	}
 	return PLUGIN_HANDLED;
@@ -63,7 +63,7 @@ public Native_Flower(id)
 	if(mission7[id] == 0 && jinduFlower[id] < 15)
 	{
 		jinduFlower[id] ++
-		client_printc(id, "\g[Mission]\y进度更新: %s | 进度:[%d/15]", daily_missions_info[7], jinduFlower[id])
+		client_printc(id, "\g[Mission]\yProgress update: %s | Progress:[%d/15]", daily_missions_info[7], jinduFlower[id])
 		SaveData(id)
 	}
 	return PLUGIN_HANDLED;
@@ -73,7 +73,7 @@ public Event_ResetHud(id)
 {
 	SaveData(id)
 	
-	if(mission8[id] == 0) client_printc(id, "\g[Mission] \y你可以输入 \g'/mission'\y 来打开每日任务菜单.")
+	if(mission8[id] == 0) client_printc(id, "\g[Mission] \yYou can type \g'/mission'\y to open the daily mission menu.")
 }
 
 public Pl_TakeDamage(victim, inflictor, attacker, Float:damage, DmgType)
@@ -99,7 +99,7 @@ public zp_user_infected_post(id, infector, nemesis)
 	if(jinduB[infector] < 10)
 	{
 		jinduB[infector] ++
-		client_printc(infector, "\g[Mission]\y进度更新: %s | 进度:[%d/10]", daily_missions_info[4], jinduB[infector])
+		client_printc(infector, "\g[Mission]\yProgress update: %s | Progress:[%d/10]", daily_missions_info[4], jinduB[infector])
 	}
 	return;
 }
@@ -117,9 +117,9 @@ public Pl_Killed(victim, attacker)
 		
 		if(jinduA[attacker] <= 15)
 		{
-			client_printc(attacker, "\g[Mission]\y进度更新: %s | 进度:[%d/15]", daily_missions_info[2], jinduA[attacker])
+			client_printc(attacker, "\g[Mission]\yProgress update: %s | Progress:[%d/15]", daily_missions_info[2], jinduA[attacker])
 		}
-		else client_printc(attacker, "\g[Mission]\y进度更新: %s | 进度:[%d/30]", daily_missions_info[3], jinduA[attacker])
+		else client_printc(attacker, "\g[Mission]\yProgress update: %s | Progress:[%d/30]", daily_missions_info[3], jinduA[attacker])
 	}
 }
 
@@ -152,7 +152,7 @@ public mission_menu(id)
 {
 	static option[64]
 	new iCoin = zpm_base_get_coin(id)
-	formatex(option, charsmax(option), "\r喪屍樂園 - 每日任务^n持有金币: %d^n页数:", iCoin)
+	formatex(option, charsmax(option), "\rZombie Paradise - Daily Mission^nCoins: %d^nPage:", iCoin)
 	new menu = menu_create(option, "mission_handler");
 
 	formatex(option, charsmax(option), "\r%s\y - %s", daily_missions[1], is_passed[mission1[id]])
@@ -173,9 +173,9 @@ public mission_menu(id)
 	menu_additem(menu, option, "8");
 	
 	menu_setprop(menu, MPROP_NUMBER_COLOR, "\r"); 
-	menu_setprop(menu, MPROP_BACKNAME, "返回"); 
-	menu_setprop(menu, MPROP_NEXTNAME, "更多..."); 
-	menu_setprop(menu, MPROP_EXITNAME, "退出"); 
+	menu_setprop(menu, MPROP_BACKNAME, "Back"); 
+	menu_setprop(menu, MPROP_NEXTNAME, "More..."); 
+	menu_setprop(menu, MPROP_EXITNAME, "Exit"); 
 	menu_setprop(menu, MPROP_EXIT, MEXIT_ALL);
 	
 	menu_display(id, menu, 0);
@@ -211,7 +211,7 @@ public mission_handler(id, menu, item)
 			get_reward(id, 1, 1)
 			mission1[id] = 1
 			}
-			else client_printc(id, "\g[Mission]\y 年轻人别太贪婪! 你已经领取过奖励了!")
+			else client_printc(id, "\g[Mission]\y You have already completed the mission!")
 		}
 		case 2:
 		{
@@ -222,9 +222,9 @@ public mission_handler(id, menu, item)
 				get_reward(id, 2, 2)
 				mission2[id] = 1
 				}
-				else client_printc(id, "\g[Mission]\y 任务目标: %s | 进度:[%d/15]", daily_missions_info[2], jinduA[id])
+				else client_printc(id, "\g[Mission]\y Target: %s | Progress:[%d/15]", daily_missions_info[2], jinduA[id])
 			}
-			else client_printc(id, "\g[Mission]\y 年轻人别太贪婪! 你已经领取过奖励了!")
+			else client_printc(id, "\g[Mission]\y You have already completed the mission!")
 		}
 		case 3:
 		{
@@ -235,9 +235,9 @@ public mission_handler(id, menu, item)
 				get_reward(id, 3, 5)
 				mission3[id] = 1
 				}
-				else client_printc(id, "\g[Mission]\y 任务目标: %s | 进度:[%d/30]", daily_missions_info[3], jinduA[id])
+				else client_printc(id, "\g[Mission]\y Target: %s | Progress:[%d/30]", daily_missions_info[3], jinduA[id])
 			}
-			else client_printc(id, "\g[Mission]\y 年轻人别太贪婪! 你已经领取过奖励了!")
+			else client_printc(id, "\g[Mission]\y You have already completed the mission!")
 		}
 		case 4:
 		{
@@ -248,9 +248,9 @@ public mission_handler(id, menu, item)
 				get_reward(id, 4, 2)
 				mission4[id] = 1
 				}
-				else client_printc(id, "\g[Mission]\y 任务目标: %s | 进度:[%d/10]", daily_missions_info[4], jinduB[id])
+				else client_printc(id, "\g[Mission]\y Target: %s | Progress:[%d/10]", daily_missions_info[4], jinduB[id])
 			}
-			else client_printc(id, "\g[Mission]\y 年轻人别太贪婪! 你已经领取过奖励了!")
+			else client_printc(id, "\g[Mission]\y You have already completed the mission!")
 		}
 		case 5: //逃跑大师
 		{
@@ -261,9 +261,9 @@ public mission_handler(id, menu, item)
 				get_reward(id, 5, 2)
 				mission5[id] = 1
 				}
-				else client_printc(id, "\g[Mission]\y 任务目标: %s | 进度:[%d/15]", daily_missions_info[5], jinduEscape[id])
+				else client_printc(id, "\g[Mission]\y Target: %s | Progress:[%d/15]", daily_missions_info[5], jinduEscape[id])
 			}
-			else client_printc(id, "\g[Mission]\y 年轻人别太贪婪! 你已经领取过奖励了!")
+			else client_printc(id, "\g[Mission]\y You have already completed the mission!")
 		}
 		case 6:
 		{
@@ -274,9 +274,9 @@ public mission_handler(id, menu, item)
 				get_reward(id, 6, 3)
 				mission6[id] = 1
 				}
-				else client_printc(id, "\g[Mission]\y 任务目标: %s | 进度:[%d/300000]", daily_missions_info[6], jinduC[id])
+				else client_printc(id, "\g[Mission]\y Target: %s | Progress:[%d/300000]", daily_missions_info[6], jinduC[id])
 			}
-			else client_printc(id, "\g[Mission]\y 年轻人别太贪婪! 你已经领取过奖励了!")
+			else client_printc(id, "\g[Mission]\y You have already completed the mission!")
 		}
 		case 7: // 爆菊狂魔
 		{
@@ -287,9 +287,9 @@ public mission_handler(id, menu, item)
 				get_reward(id, 7, 3)
 				mission7[id] = 1
 				}
-				else client_printc(id, "\g[Mission]\y 任务目标: %s | 进度:[%d/15]", daily_missions_info[7], jinduFlower[id])
+				else client_printc(id, "\g[Mission]\y Target: %s | Progress:[%d/15]", daily_missions_info[7], jinduFlower[id])
 			}
-			else client_printc(id, "\g[Mission]\y 年轻人别太贪婪! 你已经领取过奖励了!")
+			else client_printc(id, "\g[Mission]\y You have already completed the mission!")
 		}
 		case 8:
 		{
@@ -303,7 +303,7 @@ public mission_handler(id, menu, item)
 				}
 				else client_printc(id, "\g[Mission]\y 任务目标: %s | 进度:[%d/8]", daily_missions_info[8], iAddMission)
 			}
-			else client_printc(id, "\g[Mission]\y 年轻人别太贪婪! 你已经领取过奖励了!")
+			else client_printc(id, "\g[Mission]\y You have already completed the mission!")
 		}
 	}
 	
@@ -316,8 +316,8 @@ public get_reward(id, mission, reward)
 {
 	new iAmount = zpm_base_get_coin(id) + reward
 	zpm_base_set_coin(id, iAmount)
-	PlaySound(id, "ImomoeCn/Store/coin_sound.wav")
-	client_printc(id, "\g[Mission]\y 恭喜你完成任务: %s 奖励 %d 金币! ", daily_missions[mission], reward)
+	PlaySound(id, "zmParadise/Store/coin_sound.wav")
+	client_printc(id, "\g[Mission]\y You have completed mission: %s, earned %d coin(s)! ", daily_missions[mission], reward)
 }
 
 public SaveData(id) 
