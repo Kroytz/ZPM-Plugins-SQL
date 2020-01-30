@@ -24,7 +24,7 @@ public plugin_init()
 	register_plugin("[ZPM] Base", "1.0", "EmeraldGhost")
 	set_task(300.0, "Task_Timer", 123476, _, _, "b");
 	
-	register_concmd("gift_coin", "cmd_gift_coin", ADMIN_ALL, "- gift_coin <玩家> <数量> : 赠送金币给对方")
+	register_concmd("gift_coin", "cmd_gift_coin", ADMIN_ALL, "- gift_coin <NAME> <AMOUNT> : Gift coin to target")
 	
 	// Connect SQL
 	new sql_host[64], sql_user[64], sql_pass[64], sql_db[64]
@@ -63,12 +63,6 @@ public client_disconnect(id)
 {
 	save_data(id)
 	coin[id] = 0
-}
-
-public Base_BD(id)
-{
-	coin[id] = 99999
-	save_data(id)
 }
 
 public save_data(id)
@@ -133,9 +127,9 @@ public zp_round_ended(winteam)
 			if(containi(mapname, "ze_") == 0)
 			{
 				coin[i] ++
-				client_printc(i, "\g[Store] \y由于本回合逃脱成功, 你获得了 \t2 \y枚金币.")
+				client_printc(i, "\g[Store] \yYou have earned \t2 \ycoins due 'Escape Success'.")
 			}
-			else client_printc(i, "\g[Store] \y由于回合结束你仍然幸存, 你获得了 \t1 \y枚金币.")
+			else client_printc(i, "\g[Store] \yYou have earned \t1 \ycoins due 'Alive At Round End'.")
 			save_data(i)
 		}
 	}
@@ -152,7 +146,7 @@ public Task_Timer()
 		{
 			coin[i] ++
 			PlaySound(i, "zmParadise/Store/coin_sound.wav")
-			client_printc(i, "\g[Store] \y由于在线游玩 5 分钟, 你获得了 \t1 \y枚金币.")
+			client_printc(i, "\g[Store] \yYou have earned \t1 \ycoins due 'Online for 5 minutes'.")
 			save_data(i)
 		}
 	}
@@ -199,7 +193,7 @@ public cmd_gift_coin(id, level, cid)
 		}
 		
 		log_gift_all(id, str_to_num(arg_amount))
-		client_printc(0, "\g[Store] \y管理员 \g%s\y 赠送了所有人 \g%d \y枚金币.", name, str_to_num(arg_amount))
+		client_printc(0, "\g[Store] \yAdmin \g%s\y gifted all players \g%d \ycoins.", name, str_to_num(arg_amount))
 		return PLUGIN_HANDLED;
 	}
 	else if(containi(arg_name, "@humans") == 0)
@@ -217,7 +211,7 @@ public cmd_gift_coin(id, level, cid)
 		}
 		
 		log_gift_human(id, str_to_num(arg_amount))
-		client_printc(0, "\g[Store] \y管理员 \g%s\y 赠送了所有人类 \g%d \y枚金币.", name, str_to_num(arg_amount))
+		client_printc(0, "\g[Store] \yAdmin \g%s\y gifted all humans \g%d \ycoins.", name, str_to_num(arg_amount))
 		return PLUGIN_HANDLED;
 	}
 	else if(containi(arg_name, "@zombies") == 0)
@@ -235,7 +229,7 @@ public cmd_gift_coin(id, level, cid)
 		}
 		
 		log_gift_zombie(id, str_to_num(arg_amount))
-		client_printc(0, "\g[Store] \y管理员 \g%s\y 赠送了所有丧尸 \g%d \y枚金币.", name, str_to_num(arg_amount))
+		client_printc(0, "\g[Store] \yAdmin \g%s\y gifted all zombies \g%d \ycoins.", name, str_to_num(arg_amount))
 		return PLUGIN_HANDLED;
 	}
 	else if(containi(arg_name, "@alive") == 0)
@@ -253,7 +247,7 @@ public cmd_gift_coin(id, level, cid)
 		}
 		
 		log_gift_alive(id, str_to_num(arg_amount))
-		client_printc(0, "\g[Store] \y管理员 \g%s\y 赠送了所有存活玩家 \g%d \y枚金币.", name, str_to_num(arg_amount))
+		client_printc(0, "\g[Store] \yAdmin \g%s\y gifted all alive players \g%d \ycoins.", name, str_to_num(arg_amount))
 		return PLUGIN_HANDLED;
 	}
 
@@ -267,13 +261,13 @@ public cmd_gift_coin(id, level, cid)
 
     coin[target] += str_to_num(arg_amount)
 	PlaySound(target, "zmParadise/Store/coin_sound.wav")
-	client_printc(target, "\g[Store] \y你获得了 \t%d \y枚金币.", str_to_num(arg_amount))
+	client_printc(target, "\g[Store] \yYou earned \t%d \ycoins.", str_to_num(arg_amount))
 	
 	coin[id] -= str_to_num(arg_amount)
 	PlaySound(id, "zmParadise/Store/coinlose_sound.wav")
-	client_printc(id, "\g[Store] \y你失去了 \t%d \y枚金币.", str_to_num(arg_amount))
+	client_printc(id, "\g[Store] \yYou lost \t%d \ycoins.", str_to_num(arg_amount))
 
-	client_printc(0, "\g[Store] \g%s\y 赠送了\g %d \y金币给 \g%s\y .", name, str_to_num(arg_amount) , arg_name)
+	client_printc(0, "\g[Store] \g%s\y gifted\g %d \ycoins to \g%s\y .", name, str_to_num(arg_amount) , arg_name)
 	log_gift(id, arg_name, str_to_num(arg_amount))
     return PLUGIN_HANDLED 
 }
@@ -283,7 +277,7 @@ public log_gift(id, target[], amount)
     new name[32]
     get_user_name(id,name,31)
 	
-	log_to_file(log_file, "[Gift] %s 赠送 %d 金币给 %s", name, amount, target)
+	log_to_file(log_file, "[Gift] %s - %d -> %s", name, amount, target)
 }
 
 public log_gift_all(id, amount)
@@ -291,7 +285,7 @@ public log_gift_all(id, amount)
     new name[32]
     get_user_name(id,name,31)
 	
-	log_to_file(log_file, "[GiftAll] %s 赠送 %d 金币", name, amount)
+	log_to_file(log_file, "[GiftAll] %s - %d", name, amount)
 }
 
 public log_gift_alive(id, amount)
@@ -299,7 +293,7 @@ public log_gift_alive(id, amount)
     new name[32]
     get_user_name(id,name,31)
 	
-	log_to_file(log_file, "[GiftAlive] %s 赠送 %d 金币", name, amount)
+	log_to_file(log_file, "[GiftAlive] %s - %d", name, amount)
 }
 
 public log_gift_zombie(id, amount)
@@ -307,7 +301,7 @@ public log_gift_zombie(id, amount)
     new name[32]
     get_user_name(id,name,31)
 	
-	log_to_file(log_file, "[GiftZB] %s 赠送 %d 金币", name, amount)
+	log_to_file(log_file, "[GiftZB] %s - %d", name, amount)
 }
 
 public log_gift_human(id, amount)
@@ -315,5 +309,5 @@ public log_gift_human(id, amount)
     new name[32]
     get_user_name(id,name,31)
 	
-	log_to_file(log_file, "[GiftHuman] %s 赠送 %d 金币", name, amount)
+	log_to_file(log_file, "[GiftHuman] %s - %d", name, amount)
 }
