@@ -34,7 +34,7 @@ public plugin_init()
 public Event_ResetHud(id)
 {
 	if(iLastSign[id] != g_iDay)
-		client_printc(id, "\g[DailySign] \y你今天还没有签到! 输入 \g'/sign'\y 来签到.")
+		client_printc(id, "\g[DailySign] \yYou have not signed today! Type \g'/sign'\y to sign.")
 }
 
 public client_putinserver(id)
@@ -100,7 +100,7 @@ public sign_in(id)
 	iLastSign[id] = g_iDay
 	zpm_base_set_coin(id, iCoin + Award)
 	PlaySound(id, "zmParadise/Store/coin_sound.wav")
-	client_printc(id, "\g[DailySign] \y签到成功! 你获得了 \t%d \y枚金币.", Award)
+	client_printc(id, "\g[DailySign] \ySuccess! You earned \t%d \ycoin(s).", Award)
 	}
-	else client_printc(id, "\g[DailySign] \y你今天已经签到了! 请明天再来吧!")
+	else client_printc(id, "\g[DailySign] \yYou have already signed today!")
 }
