@@ -19,9 +19,7 @@ native zp_donater_get_level(id)
 
 new const has_model[][] = { "\y", "\r" }
 
-new const model_name[][] = { "null", "【蕾米莉亚】", "【黑白.涅普基雅】", "【五河琴里】", "【四糸乃】", "【時崎狂三】", "【SnowWhite Miku】", "(特殊笑声)【琪露诺】", "(限定)【克劳德】", "(限定)【白上吹雪】", "(置换.Lv1)【尼尔.2B】", "(置换.Lv1)【ELO-诗乃】", "(置换.Lv2)【泳装.和泉纱雾】" }
-//new const model_cost[] = { 0, 500, 1000, 1500, 1500, 1500, 1500, 750, 3000, 99999, 99999 } // 非活动
-//new const model_sell[] = { 0, 250, 500, 750, 750, 750, 750, 425, 1000, 1000, 1000 } // 非活动
+new const model_name[][] = { "null", "【Remilia】", "【NepGear.BW】", "【Kotori】", "【Yoshino】", "【Kurumi】", "【SnowWhite Miku】", "(SPCheer)【Cirno】", "(Limit)【Cloud】", "(Limit)【Fubuki】", "(Compose.Lv1)【Nier.2B】", "(Compose.Lv1)【ELO-Shino】", "(Compose.Lv2)【Swimsuit.Sagiri】" }
 new const model_cost[] = { 0, 500, 1000, 1500, 1500, 1500, 1000, 750, 99999, 3000, 99999, 99999, 99999 } // 活动
 new const model_sell[] = { 0, 250, 500, 750, 750, 750, 500, 375, 750, 1500, 800, 800, 1500 } // 活动
 new const model_code[][] = { "null", "remilia", "bwgear", "kotori", "yoshino", "kurumi", "swmiku", "cirno", "cloud", "fubuki", "nier2b", "eloshino", "sagiri" }
@@ -148,7 +146,7 @@ public load_data(id)
 public skin_menu(id)
 {
 		static option[64]
-		formatex(option, charsmax(option), "\r[喪屍樂園] - 模型商店^n您拥有金币：%d 个", zpm_base_get_coin(id))
+		formatex(option, charsmax(option), "\r[Zombie Paradise] - Models store^nCoin：%d", zpm_base_get_coin(id))
 		new menu = menu_create(option, "store_skinmenu");
 		
 		new szTempid[32]
@@ -157,15 +155,15 @@ public skin_menu(id)
 			new iSkin = iPlayerHasSkin[id][i]
 		
 			new szItems[101]
-			formatex(szItems, 100, "%s\r%s \y| \d%d \y金币", has_model[iSkin], model_name[i], model_cost[i])
+			formatex(szItems, 100, "%s\r%s \y| \d%d \yCoins", has_model[iSkin], model_name[i], model_cost[i])
 			num_to_str(i, szTempid, 31)
 			menu_additem(menu, szItems, szTempid, 0)
 		}
 
 		menu_setprop(menu, MPROP_NUMBER_COLOR, "\r"); 
-		menu_setprop(menu, MPROP_BACKNAME, "返回"); 
-		menu_setprop(menu, MPROP_NEXTNAME, "更多"); 
-		menu_setprop(menu, MPROP_EXITNAME, "退出"); 
+		menu_setprop(menu, MPROP_BACKNAME, "Back"); 
+		menu_setprop(menu, MPROP_NEXTNAME, "More..."); 
+		menu_setprop(menu, MPROP_EXITNAME, "Exit"); 
 		menu_setprop(menu, MPROP_EXIT, MEXIT_ALL);
 		
 		menu_display(id, menu, 0);
@@ -200,16 +198,16 @@ public store_skinmenu(id, menu, item)
 public sure_to_buy(id, skinid)
 {
 		static option[64]
-		formatex(option, charsmax(option), "\r你确定要购买%s吗？", model_name[skinid])
+		formatex(option, charsmax(option), "\rAre you sure to buy%s?", model_name[skinid])
 		new menu = menu_create(option, "confirm_handler");
 				
-		menu_additem(menu, "\y是的，我确定买！", "1");
-		menu_additem(menu, "\y不是，我手抖了。", "2");
+		menu_additem(menu, "\yYes！", "1");
+		menu_additem(menu, "\yWait..", "2");
 		
 		menu_setprop(menu, MPROP_NUMBER_COLOR, "\r"); 
-		menu_setprop(menu, MPROP_BACKNAME, "返回"); 
-		menu_setprop(menu, MPROP_NEXTNAME, "更多..."); 
-		menu_setprop(menu, MPROP_EXITNAME, "退出"); 
+		menu_setprop(menu, MPROP_BACKNAME, "Back"); 
+		menu_setprop(menu, MPROP_NEXTNAME, "More..."); 
+		menu_setprop(menu, MPROP_EXITNAME, "Exit"); 
 		menu_setprop(menu, MPROP_EXIT, MEXIT_ALL);
 		
 		menu_display(id, menu, 0);
@@ -259,18 +257,18 @@ public buy_skin(id, skinid)
 
 	if(IsHasModel == 1)
 	{
-		client_printc(id, "\g[Store]\y 你已经拥有皮肤%s了 !", model_name[skinid]);
+		client_printc(id, "\g[Store]\y You have already bought%s !", model_name[skinid]);
 	}
 	else if(iCoin >= model_cost[skinid])
 	{
-		client_printc(id, "\g[Store]\y 购买皮肤\g%s\y成功 !", model_name[skinid]);
+		client_printc(id, "\g[Store]\y Buy\g%s\ysuccess !", model_name[skinid]);
 		PlaySound(id, "zmParadise/Store/coinlose_sound.wav")
 		zpm_base_set_coin(id, iCoin - model_cost[skinid]);
 		iPlayerHasSkin[id][skinid] = 1
 		save_data(id)
 		log_buy(id, skinid)
 	}
-	else client_printc(id, "\g[Store]\y 没钱还想买皮肤? 算了吧!");
+	else client_printc(id, "\g[Store]\y No enough coin !");
 	
 	return PLUGIN_HANDLED;
 }
@@ -280,13 +278,13 @@ public log_buy(id, skinid)
     new name[32]
     get_user_name(id,name,31)
 	
-	log_to_file(log_file, "[Buy] %s 购买皮肤 %s .", name, model_name[skinid])
+	log_to_file(log_file, "[Buy] %s -> %s .", name, model_name[skinid])
 }
 
 public sellskin_menu(id)
 {
 		static option[64]
-		formatex(option, charsmax(option), "\r[喪屍樂園] - 模型收购^n您拥有金币：%d 个", zpm_base_get_coin(id))
+		formatex(option, charsmax(option), "\r[Zombie Paradise] - Models sell^nCoin：%d", zpm_base_get_coin(id))
 		new menu = menu_create(option, "store_sellskinmenu");
 		
 		new szTempid[32]
@@ -295,15 +293,15 @@ public sellskin_menu(id)
 			new iSkin = iPlayerHasSkin[id][i]
 		
 			new szItems[101]
-			formatex(szItems, 100, "\y%s\r%s - %d 金币", has_model[iSkin], model_name[i], model_sell[i])
+			formatex(szItems, 100, "\y%s\r%s - %d Coins", has_model[iSkin], model_name[i], model_sell[i])
 			num_to_str(i, szTempid, 31)
 			menu_additem(menu, szItems, szTempid, 0)
 		}
 
 		menu_setprop(menu, MPROP_NUMBER_COLOR, "\r"); 
-		menu_setprop(menu, MPROP_BACKNAME, "返回"); 
-		menu_setprop(menu, MPROP_NEXTNAME, "更多"); 
-		menu_setprop(menu, MPROP_EXITNAME, "退出"); 
+		menu_setprop(menu, MPROP_BACKNAME, "Back"); 
+		menu_setprop(menu, MPROP_NEXTNAME, "More..."); 
+		menu_setprop(menu, MPROP_EXITNAME, "Exit"); 
 		menu_setprop(menu, MPROP_EXIT, MEXIT_ALL);
 		
 		menu_display(id, menu, 0);
@@ -338,16 +336,16 @@ public store_sellskinmenu(id, menu, item)
 public sure_to_sell(id, skinid)
 {
 		static option[64]
-		formatex(option, charsmax(option), "\r你确定要卖出%s吗？", model_name[skinid])
+		formatex(option, charsmax(option), "\rAre you sure to sell%s?", model_name[skinid])
 		new menu = menu_create(option, "sell_confirm_handler");
 				
-		menu_additem(menu, "\y是的，我确定卖！", "1");
-		menu_additem(menu, "\y不是，我手抖了。", "2");
+		menu_additem(menu, "\yYes！", "1");
+		menu_additem(menu, "\yWait..", "2");
 		
 		menu_setprop(menu, MPROP_NUMBER_COLOR, "\r"); 
-		menu_setprop(menu, MPROP_BACKNAME, "返回"); 
-		menu_setprop(menu, MPROP_NEXTNAME, "更多..."); 
-		menu_setprop(menu, MPROP_EXITNAME, "退出"); 
+		menu_setprop(menu, MPROP_BACKNAME, "Back"); 
+		menu_setprop(menu, MPROP_NEXTNAME, "More..."); 
+		menu_setprop(menu, MPROP_EXITNAME, "Exit"); 
 		menu_setprop(menu, MPROP_EXIT, MEXIT_ALL);
 		
 		menu_display(id, menu, 0);
@@ -397,14 +395,14 @@ public sell_skin(id, skinid)
 
 	if(IsHasModel == 1)
 	{
-		client_printc(id, "\g[Store]\y 卖出皮肤\g%s\y成功 !", model_name[skinid]);
+		client_printc(id, "\g[Store]\y Sell\g%s\ysuccess !", model_name[skinid]);
 		PlaySound(id, "zmParadise/Store/coin_sound.wav")
 		zpm_base_set_coin(id, iCoin + model_sell[skinid]);
 		iPlayerHasSkin[id][skinid] = 0
 		save_data(id)
 		log_sell(id, skinid)
 	}
-	else client_printc(id, "\g[Store]\y 没皮肤你卖什么? 洗洗睡吧!");
+	else client_printc(id, "\g[Store]\y You haven't bought this skin!");
 	
 	return PLUGIN_HANDLED;
 }
@@ -414,7 +412,7 @@ public log_sell(id, skinid)
     new name[32]
     get_user_name(id,name,31)
 	
-	log_to_file(log_file, "[Sell] %s 卖出皮肤 %s .", name, model_name[skinid])
+	log_to_file(log_file, "[Sell] %s -> %s .", name, model_name[skinid])
 }
 
 public compose_skin(id)
